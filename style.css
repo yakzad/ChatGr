@@ -1,0 +1,255 @@
+html, body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    outline: none;
+    border: none;
+}
+
+#ChatLogo {
+  width: 180px;
+  height: auto;
+  margin-right: 10px;
+  margin-bottom: 4px;
+  margin-top: -20px;
+  vertical-align: middle;
+}
+
+
+#chatLayout{
+    display: flex;
+    flex-direction: row;
+    height: 100vh;
+}
+
+#sidebar{
+    width: 25%;
+    background-color: #dbdbdc;
+    color: white;
+    box-sizing: border-box;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    justify-content: flex-start;
+    padding-top: 0;
+
+}
+
+#searchBar {
+display: flex;
+align-items: center;
+gap: 10px;
+margin-top: -40px;
+margin-right: auto;
+margin-left: auto;
+}
+
+
+
+#chatSearch{
+    width: 50%;
+    margin: 0;
+    padding: 12px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 30px;
+}
+
+#enterChatbtn{
+    width: 50%;
+    padding: 12px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 16px;
+    margin: 0;
+    outline: none;
+    border: 1px solid #ddd;
+}
+
+#enterChatbtn:hover {
+  transform: scale(1.03);
+}
+
+
+#chatInput{
+  display: flex;
+  margin: 0 16px 16px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+  border-top: 1px solid rgb(183, 181, 181);
+  border-radius: 30px;
+  border: none;
+  outline: none;
+}
+#chatInput input[type="text"] {
+  flex: 1;
+}
+
+
+#chatPanel{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+#messages{
+    flex: 1;
+    padding: 16px;
+    overflow-y: auto;
+    box-sizing: border-box;
+    border: none;
+}
+
+#chatInput input,
+#chatInput button {
+  border: none;
+  outline: none;
+  background: transparent;
+}
+
+#contactInfoBtn{
+  width: 100%;
+  position: sticky;
+  top: 0;
+  background-color: #c8c8d2;
+  color: rgb(35, 28, 28);
+  min-height: 64px;
+  font-size: 24px;
+  font-weight: 700;
+  text-align: center;
+  padding: 10px 14px;
+  border-bottom: 0;
+  border-radius: 0; 
+  border: none;
+  display: flex;
+  justify-content: center;
+  font-weight: 600;
+  z-index: 2;
+  letter-spacing: .2px;
+  cursor: pointer;
+}
+
+#contactInfoBtn:hover {
+  background-color: #d7d7e1;
+}
+
+
+#emojiBtn:hover {
+  transform: scale(2);
+}
+
+
+#chatPanel{
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: relative;
+}
+
+#messages{
+  flex: 1;
+  overflow-y: auto;
+}
+
+#emojiBtn{
+    cursor: pointer;
+}
+
+#sendBtn{
+    cursor: pointer;
+}
+
+#sendBtn:hover{
+transform: scale(2);
+}
+
+.msg{
+    margin-bottom: 12px;
+    padding: 10px;
+    border-radius: 8px;
+    max-width: 70%;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.me{
+    background-color: #dcf8c6;
+    align-self: flex-end;
+    margin-left: auto;
+    border-top-right-radius: 18px;
+    border-bottom-right-radius: 18px;
+    border-bottom-left-radius: 10px;
+}
+
+.other {
+  background-color: #ffffff;
+  align-self: flex-start;
+  margin-right: auto;
+  border-top-right-radius: 10px;
+  border-top-left-radius: 18px;
+  border-bottom-left-radius: 18px;
+  border-bottom-right-radius: 10px;
+}
+
+
+#messages::before {
+  content: "💬  Empieza una conversación con tu GrFriend…";
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: #9aa0a6;
+  font-size: 18px;
+  letter-spacing: .2px;
+  pointer-events: none;
+  transform: translateY(4px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+#messages {
+  position: relative;
+  min-height: 240px;
+  padding: 16px 20px;
+}
+
+#messages:empty::before{
+  opacity: .9;
+  transform: translateY(0);
+}
+
+
+#chatInput {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 6px;
+  background-color: #bdbcbc;
+  border-top: 1px solid #ddd;
+}
+
+#chatInput input {
+  flex: 1;
+  height: 44px;
+  border: none;
+  outline: none;
+  border-radius: 999px;
+  padding: 0 16px;
+  font-size: 16px;
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+#chatInput input:focus {
+  box-shadow: 0 0 0 3px rgba(0, 153, 255, 0.25);
+}
