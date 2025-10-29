@@ -33,3 +33,27 @@ input.addEventListener('keydown', (e) => {
     sendMessage();
   }
 });
+
+const infoBtn = document.getElementById('contactInfoBtn');
+const infoPanel = document.getElementById('contactInfoPanel');
+
+infoBtn.addEventListener('click', () => {
+  infoPanel.classList.toggle('visible');
+});
+
+const emojiBtn = document.getElementById("emojiBtn");
+const emojiPanel = document.getElementById("emojiPanel");
+const messageInput = document.getElementById("messageInput");
+
+emojiBtn.addEventListener("click", () => {
+  emojiPanel.classList.toggle("visible");
+});
+
+emojiPanel.addEventListener("click", (e) => {
+  if (e.target.classList.contains("emoji")) {
+    const emoji = e.target.textContent;
+    messageInput.value += emoji;
+  }
+});
+
+
