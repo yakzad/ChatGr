@@ -19,13 +19,12 @@ html, body {
 #chatLayout{
     display: flex;
     flex-direction: row;
-    height: 100vh;
+    height: 100dvh;
 }
 
 #sidebar{
     width: 25%;
     background-color: #dbdbdc;
-    color: white;
     box-sizing: border-box;
     overflow-y: auto;
     display: flex;
@@ -146,6 +145,8 @@ margin-left: auto;
 }
 
 
+
+
 #emojiBtn:hover {
   transform: scale(2);
 }
@@ -192,6 +193,14 @@ transform: scale(2);
     border-bottom-left-radius: 10px;
 }
 
+.timeStamp {
+  display: block;
+  font-size: 10px;
+  color: #999;
+  margin-top: 4px;
+  text-align: right;
+}
+
 .other {
   background-color: #ffffff;
   align-self: flex-start;
@@ -202,9 +211,14 @@ transform: scale(2);
   border-bottom-right-radius: 10px;
 }
 
+.msg {
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
+}
+
 
 #messages::before {
-  content: "💬  Empieza una conversación con tu GrFriend…";
+  content: "💬  Start a chat with your GrFriend…";
   position: absolute;
   inset: 0;
   display: grid;
@@ -252,4 +266,15 @@ transform: scale(2);
 
 #chatInput input:focus {
   box-shadow: 0 0 0 3px rgba(0, 153, 255, 0.25);
+}
+
+
+@media (max-width: 768px) {
+  #chatLayout {
+    flex-direction: column;
+  }
+  #sidebar {
+    width: 100%;
+    height: auto;
+  }
 }
