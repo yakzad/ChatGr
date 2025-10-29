@@ -18,6 +18,8 @@ function sendMessage() {
   timeSpan.textContent = `${hours}:${minutes}`;
   messageDiv.appendChild(timeSpan);
   messages.appendChild(messageDiv);
+  messages.classList.add('hasMessages');
+
 
   input.value = '';
   messages.scrollTop = messages.scrollHeight;

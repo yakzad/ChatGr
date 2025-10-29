@@ -228,20 +228,22 @@ transform: scale(2);
   letter-spacing: .2px;
   pointer-events: none;
   transform: translateY(4px);
+  opacity: 0.9;
   transition: opacity 0.25s ease, transform 0.25s ease;
 }
+
+#messages.hasMessages::before {
+  opacity: 0;
+  content: none;
+  transform: translateY(8px);
+}
+
 
 #messages {
   position: relative;
   min-height: 240px;
   padding: 16px 20px;
 }
-
-#messages:empty::before{
-  opacity: .9;
-  transform: translateY(0);
-}
-
 
 #chatInput {
   display: flex;
