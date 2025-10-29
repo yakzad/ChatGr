@@ -325,3 +325,35 @@ transform: scale(2);
   transform: scale(1.2);
 }
 
+#contactList {
+  display: flex;
+  flex-direction: column; 
+  gap: 10px;
+  margin-top: 15px;
+  width: 80%;
+  align-items: center;
+}
+
+.contact {
+  width: 100%;
+  background-color: #ffffff;
+  color: #333;
+  font-size: 15px;
+  font-weight: 500;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.contact:hover {
+  background-color: #e6f0e6;
+  transform: translateY(-1px);
+}
+
+.contact:active {
+  background-color: #cde6c3;
+  transform: scale(0.98);
+}

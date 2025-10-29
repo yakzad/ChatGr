@@ -56,4 +56,55 @@ emojiPanel.addEventListener("click", (e) => {
   }
 });
 
+const CONTACTS = [
+  { id: 'jack',  name: 'Jack Saad',  phone: '5568082799', status: 'Online' },
+  { id: 'Moy',  name: 'Moises Sacal',  phone: '5582101378', status: 'Online' },
+  { id: 'Yaacov',  name: 'Yaacov Cabasso',  phone: '5512155331', status: 'Offline' },
+  { id: 'Gabriel',  name: 'Gabriel Tuachi',  phone: '5644666217', status: 'Offline' },
+  { id: 'Isaac',  name: 'Isaac Dayan',  phone: '5576091770', status: 'Offline' },
+ ];
 
+const listEl = document.getElementById('contactList');
+
+function renderContacts(list) {
+  if (!list.length) {
+    listEl.innerHTML = '<div class="emptyResults">No GrFriends found</div>';
+    return;
+  }
+  listEl.innerHTML = list
+    .map(c => `<button class="contact" data-id="${c.id}" type="button">${c.name}</button>`)
+    .join('');
+}
+
+const searchInput = document.getElementById('chatSearch');
+
+function searchContacts() {
+  const q = searchInput.value.trim().toLowerCase();
+  if (!q) { renderContacts(CONTACTS); return; }
+  const res = CONTACTS.filter(c => c.name.toLowerCase().includes(q));
+  renderContacts(res);
+}
+
+document.getElementById('enterChatbtn').addEventListener('click', searchContacts);
+searchInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') searchContacts();
+});
+searchInput.addEventListener('input', searchContacts);
+
+const contactInfoBtn = document.getElementById('contactInfoBtn');
+
+listEl.addEventListener('click', (e) => {
+  const btn = e.target.closest('.contact');
+  if (!btn) return;
+  const c = CONTACTS.find(x => x.id === btn.dataset.id);
+  if (!c) return;
+  contactInfoBtn.textContent = `${c.name} ⓘ`;
+  
+  infoPanel.innerHTML = `
+    <p><strong>Name:</strong> ${c.name}</p>
+    <p><strong>Status:</strong> ${c.status}</p>
+    <p><strong>Phone:</strong> ${c.phone}</p>
+  `;
+});
+
+renderContacts(CONTACTS);
