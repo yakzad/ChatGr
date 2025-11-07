@@ -1,73 +1,174 @@
-const messages = document.getElementById('messages');
-const input = document.getElementById('messageInput');
-const sendBtn = document.getElementById('sendBtn');
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+import { getFirestore, collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
 
-function sendMessage() {
-  const messageText = input.value.trim();
-  if (messageText === '') return;
-
-  const messageDiv = document.createElement('div');
-  messageDiv.className = 'msg me';
-  messageDiv.textContent = messageText;
-  const timeSpan = document.createElement('span');
-  timeSpan.className = 'timeStamp';
-  const now = new Date();
-  const hours = now.getHours().toString().padStart(2, '0');
-  const minutes = now.getMinutes().toString().padStart(2, '0');
-  timeSpan.textContent = `${hours}:${minutes}`;
-  messageDiv.appendChild(timeSpan);
-  messages.appendChild(messageDiv);
-  messages.classList.add('hasMessages');
+const firebaseConfig = {
+  apiKey: "AIzaSyByrOeXA8JobmukItt1rafgCroAciHpwcM",
+  authDomain: "chatgr-6ec4e.firebaseapp.com",
+  projectId: "chatgr-6ec4e",
+  storageBucket: "chatgr-6ec4e.firebasestorage.app",
+  messagingSenderId: "937292188482",
+  appId: "1:937292188482:web:3a6302fb9271a0ed95d6db"
+};
 
 
-  input.value = '';
-  messages.scrollTop = messages.scrollHeight;
+const app  = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db   = getFirestore(app);
+
+const byId = (id) => document.getElementById(id);
+
+
+const authView       = byId('authView');
+const chatView       = byId('chatView');
+const emailEl        = byId('email');
+const passEl         = byId('password');
+const btnSignup      = byId('btnSignup');
+const btnLogin       = byId('btnLogin');
+const btnLogout      = byId('btnLogout');
+const authError      = byId('authError');
+const messages       = byId('messages');
+const messageInput   = byId('messageInput');
+const sendBtn        = byId('sendBtn');
+const chatHeaderName = byId('chatHeaderName');
+const infoBtn        = byId('contactInfoBtn');
+const infoPanel      = byId('contactInfoPanel');
+const emojiBtn       = byId('emojiBtn');
+const emojiPanel     = byId('emojiPanel');
+const listEl         = byId('contactList');
+const searchInput    = byId('chatSearch');
+const enterChatBtn   = byId('enterChatbtn');
+
+let CONTACTS_CACHE = [];
+let unsubscribeMsgs = null;
+let CURRENT_PEER_UID = null;
+const chatIdFor = (a,b) => [a,b].sort().join('_');
+
+btnSignup?.addEventListener('click', signup);
+btnLogin ?.addEventListener('click', login);
+btnLogout?.addEventListener('click', () => signOut(auth));
+btnLogout?.addEventListener('click', () => signOut(auth));
+
+
+async function ensureUserProfile(user) {
+  if (!user) return;
+  await setDoc(doc(db, "users", user.uid), {
+    uid: user.uid,
+    email: user.email || null,
+    updatedAt: serverTimestamp(),
+    createdAt: serverTimestamp()
+  }, { merge: true });
 }
 
-sendBtn.addEventListener('click', sendMessage);
+async function signup() {
+  const email = (emailEl?.value || '').trim();
+  const pass  = passEl?.value || '';
+  const cred  = await createUserWithEmailAndPassword(auth, email, pass);
+  await ensureUserProfile(cred.user); 
+}
 
-input.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter' && !e.shiftKey) {
-    e.preventDefault();
-    sendMessage();
+async function login() {
+  const email = (emailEl?.value || '').trim();
+  const pass  = passEl?.value || '';
+  await signInWithEmailAndPassword(auth, email, pass);
+}
+
+function showAuthError(e) {
+  if (!authError) return;
+  authError.textContent = e?.message ?? 'Auth error';
+  authError.classList.remove('hidden');
+}
+
+onAuthStateChanged(auth, async (u) => {
+  try {
+    authView?.classList.toggle('hidden', !!u);
+    chatView?.classList.toggle('hidden', !u);
+    if (u) {
+      chatHeaderName && (chatHeaderName.textContent = u.email || 'Chat');
+      await ensureUserProfile(u);
+      listenForContacts();
+      messages && (messages.innerHTML = '');
+      if (CONTACTS?.length) openChatFor(CONTACTS[0].id);
+
+  } else {
+    messages && (messages.innerHTML = '');
+    CURRENT_PEER_UID = null;
+    if (unsubscribeMsgs) { unsubscribeMsgs(); unsubscribeMsgs = null; }
+  }
+  } catch (e) {
+    showAuthError(e);
   }
 });
 
-const infoBtn = document.getElementById('contactInfoBtn');
-const infoPanel = document.getElementById('contactInfoPanel');
-
-infoBtn.addEventListener('click', () => {
-  infoPanel.classList.toggle('visible');
+sendBtn?.addEventListener('click', sendMessageFirebase);
+messageInput?.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessageFirebase(); }
 });
 
-const emojiBtn = document.getElementById("emojiBtn");
-const emojiPanel = document.getElementById("emojiPanel");
-const messageInput = document.getElementById("messageInput");
+async function sendMessageFirebase() {
+  try {
+    const text = (messageInput?.value || '').trim();
+    const me = auth.currentUser;
+    if (!me || !text) return;
+    if (!CURRENT_PEER_UID) { alert("Selecciona un contacto para chatear"); return; }
+    const cid = chatIdFor(me.uid, CURRENT_PEER_UID);
+    await setDoc(doc(db, "chats", cid), {
+      members: [me.uid, CURRENT_PEER_UID].sort(),
+      updatedAt: serverTimestamp(),
+      lastMessage: text
+    }, { merge: true });
+    await addDoc(collection(db, "chats", cid, "messages"), {
+      senderId: me.uid,
+      text,
+      createdAt: serverTimestamp()
+    });
+    messageInput.value = '';
+  } catch (e) {
+    console.error(e);
+    alert(e?.message || 'send error');
+  }
+}
 
-emojiBtn.addEventListener("click", () => {
-  emojiPanel.classList.toggle("visible");
+
+emojiBtn?.addEventListener("click", () => {
+  emojiPanel?.classList.toggle("visible");
 });
-
-emojiPanel.addEventListener("click", (e) => {
-  if (e.target.classList.contains("emoji")) {
-    const emoji = e.target.textContent;
-    messageInput.value += emoji;
+emojiPanel?.addEventListener("click", (e) => {
+  const t = e.target;
+  if (t?.classList?.contains("emoji") && messageInput) {
+    messageInput.value += t.textContent;
   }
 });
 
-const CONTACTS = [
-  { id: 'jack',  name: 'Jack Saad',  phone: '5568082799', status: 'Online' },
-  { id: 'Moy',  name: 'Moises Sacal',  phone: '5582101378', status: 'Online' },
-  { id: 'Yaacov',  name: 'Yaacov Cabasso',  phone: '5512155331', status: 'Offline' },
-  { id: 'Gabriel',  name: 'Gabriel Tuachi',  phone: '5644666217', status: 'Offline' },
-  { id: 'Isaac',  name: 'Isaac Dayan',  phone: '5576091770', status: 'Offline' },
- ];
 
-const listEl = document.getElementById('contactList');
+
+function listenForContacts() {
+  const me = auth.currentUser;
+  if (!me) return;
+
+  const qUsers = query(collection(db, "users"), orderBy("email"));
+  onSnapshot(qUsers, (snap) => {
+    const users = [];
+    snap.forEach((d) => {
+      const u = d.data();
+      if (u.uid !== me.uid) {
+        users.push({
+          id: u.uid,
+          name: u.displayName || (u.email ? u.email.split("@")[0] : "User"),
+          phone: u.phone || "N/A",
+          status: u.status || "Online",
+        });
+      }
+    });
+    CONTACTS_CACHE = users;
+    renderContacts(CONTACTS_CACHE);
+  });
+}
 
 function renderContacts(list) {
-  if (!list.length) {
+  if (!listEl) return;
+  if (!list?.length) {
     listEl.innerHTML = '<div class="emptyResults">No GrFriends found</div>';
     return;
   }
@@ -76,35 +177,55 @@ function renderContacts(list) {
     .join('');
 }
 
-const searchInput = document.getElementById('chatSearch');
-
 function searchContacts() {
+  if (!searchInput) return;
   const q = searchInput.value.trim().toLowerCase();
-  if (!q) { renderContacts(CONTACTS); return; }
-  const res = CONTACTS.filter(c => c.name.toLowerCase().includes(q));
-  renderContacts(res);
+  if (!q) { renderContacts(CONTACTS_CACHE); return; }
+  renderContacts(CONTACTS_CACHE.filter(c => c.name.toLowerCase().includes(q)));
 }
 
-document.getElementById('enterChatbtn').addEventListener('click', searchContacts);
-searchInput.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') searchContacts();
-});
-searchInput.addEventListener('input', searchContacts);
+enterChatBtn?.addEventListener('click', searchContacts);
+searchInput?.addEventListener('keydown', (e) => { if (e.key === 'Enter') searchContacts(); });
+searchInput?.addEventListener('input', searchContacts);
 
-const contactInfoBtn = document.getElementById('contactInfoBtn');
-
-listEl.addEventListener('click', (e) => {
-  const btn = e.target.closest('.contact');
+listEl?.addEventListener('click', (e) => {
+  const btn = e.target.closest?.('.contact');
   if (!btn) return;
-  const c = CONTACTS.find(x => x.id === btn.dataset.id);
+  const c = CONTACTS_CACHE.find(x => x.id === btn.dataset.id);
   if (!c) return;
-  contactInfoBtn.textContent = `${c.name} ⓘ`;
-  
-  infoPanel.innerHTML = `
-    <p><strong>Name:</strong> ${c.name}</p>
-    <p><strong>Status:</strong> ${c.status}</p>
-    <p><strong>Phone:</strong> ${c.phone}</p>
-  `;
+
+  if (infoPanel) {
+    infoPanel.innerHTML = `
+      <p><strong>Name:</strong> ${c.name}</p>
+      <p><strong>Status:</strong> ${c.status}</p>
+      <p><strong>Phone:</strong> ${c.phone}</p>
+    `;
+  }
+
+  openChatFor(c.id);
 });
 
-renderContacts(CONTACTS);
+
+
+
+function openChatFor(peerId) {
+  const me = auth.currentUser;
+  if (!me) return;
+  CURRENT_PEER_UID = peerId;
+  if (unsubscribeMsgs) { unsubscribeMsgs(); unsubscribeMsgs = null; }
+  const cid = chatIdFor(me.uid, peerId);
+  const qMsg = query(collection(db, 'chats', cid, 'messages'), orderBy('createdAt', 'asc'));
+  unsubscribeMsgs = onSnapshot(qMsg, (snap) => {
+    if (!messages) return;
+    messages.innerHTML = '';
+    snap.forEach(docSnap => {
+      const m = docSnap.data();
+      const div = document.createElement('div');
+      div.className = (m.senderId === me.uid) ? 'msg me' : 'msg';
+      div.textContent = m.text;
+      messages.appendChild(div);
+    });
+    messages.scrollTop = messages.scrollHeight;
+  });
+}
+

@@ -357,3 +357,87 @@ transform: scale(2);
   background-color: #cde6c3;
   transform: scale(0.98);
 }
+
+.hidden {
+  display: none;
+}
+
+#btnLogout{
+  padding:10px 18px;
+  border:none;
+  border-radius:999px;
+  background:#cb0c0c;
+  color:#fff;
+  font-weight:500;
+  cursor:pointer;
+  transition:.2s transform,.2s opacity;
+  position: fixed;
+  bottom: 20px; 
+  left: 20px;
+}
+#btnLogout:hover{
+  transform:translateY(-1px);
+  opacity:.9;
+}
+#btnLogout:active{
+  transform:scale(0.98);
+}
+
+#contactList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+  align-items: center;
+  padding: 0 10px;
+}
+
+.contactItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center; 
+  width: 100%;              
+  min-height: 48px; 
+  background: #ffffff;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 14px;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  transition: background 0.2s, transform 0.1s;
+}
+
+.contactItem:hover {
+  background: #e7f0ff;
+  transform: scale(1.02);
+}
+
+.contactItem .meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.contactItem .name {
+  font-weight: 600;
+  color: #222;
+}
+
+.contactItem .status {
+  font-size: 13px;
+  color: #777;
+}
+
+.contactItem .meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.contactItem .name {
+  font-weight: 600;
+  color: #222;
+  text-align: center;
+  width: 100%;
+}
