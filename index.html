@@ -9,13 +9,35 @@
 
 <body>
   <!-- AUTH VIEW -->
-  <div id="authView">
-    <input id="email" type="email" placeholder="Email">
-    <input id="password" type="password" placeholder="Password">
-    <button id="btnLogin">Sign in</button>
-    <button id="btnSignup">Create Account</button>
-    <p id="authError" class="hidden"></p>
+<div id="authView">
+  <div class="auth-wrap">
+    <div class="auth-card">
+      <img class="auth-logo" src="img/ChatGr.png" alt="ChatGr">
+      <h1>Welcome back</h1>
+      <p class="auth-sub">The Smart Way to Connect</p>
+
+      <label>Email</label>
+      <input id="email" type="email" placeholder="you@example.com" autocomplete="email">
+
+      <label>Password</label>
+      <div class="auth-pass">
+        <input id="password" type="password" placeholder="••••••••" autocomplete="current-password">
+        <button type="button" class="show-pass" aria-label="Show password">👁️</button>
+      </div>
+
+      <button id="btnLogin" class="btn-primary">Sign in</button>
+      <button id="btnSignup" class="btn-secondary">Create Account</button>
+
+      <p id="authError" class="auth-error hidden"></p>
+
+      <div class="auth-foot">
+      </div>
+    </div>
   </div>
+</div>
+
+
+
 
   <!--  CHAT -->
   <div id="chatView" class="hidden">
@@ -26,195 +48,93 @@
           <input id="chatSearch" type="text" placeholder="Search GrChats...">
           <button id="enterChatbtn" type="button" aria-label="Enter chat">Search GrFriends</button>
         </div>
+                  <h3 id="friendsTitle">Select a GrFriend</h3>
+
         <div id="contactList"></div>
         <button id="btnLogout">SignOut</button>
-
       </div>
 
-      <section id="chatPanel">
-        <button id="contactInfoBtn">Jack Saad ⓘ</button>
-        <div id="contactInfoPanel" class="hidden"></div>
-      </section>
-    </div>
+<section id="chatPanel">
+  <div id="chatHeader">
+    <span id="chatHeaderName">ChatGr</span>
+    <button id="contactInfoBtn" type="button" aria-label="Show contact info">ⓘ</button>
   </div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-    import {
-      getAuth,
-      onAuthStateChanged,
-      createUserWithEmailAndPassword,
-      signInWithEmailAndPassword,
-      sendEmailVerification,
-      signOut
-    } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-    import {
-      getFirestore,
-      collection,
-      query,
-      orderBy,
-      onSnapshot,
-      doc,
-      setDoc,
-      serverTimestamp
-    } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+  <div id="contactInfoPanel" class="hidden"></div>
+
+  <div id="messages"></div>
+
+  <div id="messageInputBar">
+    <button id="emojiBtn" type="button" aria-label="Emoji">😊</button>
+    <input id="messageInput" type="text" placeholder="Type a message..." />
+    <button id="sendBtn" type="button">Send</button>
+  </div>
+
+  <div id="emojiPanel">
+    <!-- Caritas -->
+    <button class="emoji">😀</button>
+    <button class="emoji">😁</button>
+    <button class="emoji">😂</button>
+    <button class="emoji">🤣</button>
+    <button class="emoji">😅</button>
+    <button class="emoji">😊</button>
+    <button class="emoji">😍</button>
+    <button class="emoji">😘</button>
+    <button class="emoji">😎</button>
+    <button class="emoji">😢</button>
+    <button class="emoji">😭</button>
+    <button class="emoji">😡</button>
+    <button class="emoji">😱</button>
+    <button class="emoji">🤔</button>
+    <button class="emoji">🤭</button>
+    <button class="emoji">🤫</button>
+    <button class="emoji">😴</button>
+    <button class="emoji">🤤</button>
+    <button class="emoji">🥳</button>
+    <button class="emoji">🤯</button>
+
+    <!-- Manos -->
+    <button class="emoji">👍</button>
+    <button class="emoji">👎</button>
+    <button class="emoji">👏</button>
+    <button class="emoji">🙌</button>
+    <button class="emoji">🙏</button>
+    <button class="emoji">🤝</button>
+    <button class="emoji">👌</button>
+    <button class="emoji">✌️</button>
+    <button class="emoji">🤟</button>
+
+    <!-- Objetos / símbolos -->
+    <button class="emoji">❤️</button>
+    <button class="emoji">💔</button>
+    <button class="emoji">💪</button>
+    <button class="emoji">🔥</button>
+    <button class="emoji">💯</button>
+    <button class="emoji">🎉</button>
+    <button class="emoji">🎁</button>
+    <button class="emoji">⭐</button>
+    <button class="emoji">🌙</button>
+    <button class="emoji">☀️</button>
+    <button class="emoji">🌈</button>
+    <button class="emoji">⚡</button>
+
+    <!-- Animales / comida -->
+    <button class="emoji">🐶</button>
+    <button class="emoji">🐱</button>
+    <button class="emoji">🐰</button>
+    <button class="emoji">🐻</button>
+    <button class="emoji">🍎</button>
+    <button class="emoji">🍕</button>
+    <button class="emoji">🍔</button>
+    <button class="emoji">🍩</button>
+    <button class="emoji">☕</button>
+  </div>
+</section>
+</div>
+</div>
 
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyByrOeXA8JobmukItt1rafgCroAciHpwcM",
-      authDomain: "chatgr-6ec4e.firebaseapp.com",
-      projectId: "chatgr-6ec4e",
-      storageBucket: "chatgr-6ec4e.firebasestorage.app",
-      messagingSenderId: "937292188482",
-      appId: "1:937292188482:web:3a6302fb9271a0ed95d6db"
-    };
-
-    const app = initializeApp(firebaseConfig);
-
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-
-    const $ = (id) => document.getElementById(id);
-    const showError = (msg, color="#d33") => {
-      const el = $("authError");
-      el.textContent = msg;
-      el.classList.remove("hidden");
-      el.style.color = color;
-    };
-    const contactListEl = $("contactList");
-    const searchInput   = $("chatSearch");
-    const searchBtn     = $("enterChatbtn");
-    let allFriends = [];
-
-        // --- Render y filtro de amigos ---
-    function renderFriends(list) {
-      if (!list.length) {
-        contactListEl.innerHTML = `<div class="emptyState">No friends found</div>`;
-        return;
-      }
-      contactListEl.innerHTML = list.map(u => `
-        <button class="contactItem" data-uid="${u.id}">
-          <img class="avatar" src="${u.photoURL || 'img/default-avatar.png'}" alt="">
-          <div class="meta">
-            <div class="name">${u.displayName || u.email || 'Friend'}</div>
-            <div class="status">${u.statusMessage || ''}</div>
-          </div>
-        </button>
-      `).join("");
-    }
-
-    function applyFilter() {
-      const q = (searchInput?.value || "").trim().toLowerCase();
-      const filtered = !q ? allFriends : allFriends.filter(u =>
-        (u.displayName || "").toLowerCase().includes(q) ||
-        (u.email || "").toLowerCase().includes(q)
-      );
-      renderFriends(filtered);
-    }
-
-    searchInput?.addEventListener("input", applyFilter);
-    searchBtn?.addEventListener("click", applyFilter);
-
-function startFriendsListener(currentUser) {
-  const usersRef = collection(db, "users");
-  const qUsers   = query(usersRef, orderBy("displayName"));
-
-  if (startFriendsListener.unsub) startFriendsListener.unsub();
-
-  startFriendsListener.unsub = onSnapshot(qUsers, (snap) => {
-    const rows = [];
-    snap.forEach(docSnap => {
-      if (docSnap.id === currentUser.uid) return; 
-      const d = docSnap.data() || {};
-      rows.push({
-        id: docSnap.id,
-        displayName: d.displayName || "",
-        email: d.email || "",
-        photoURL: d.photoURL || "",
-        statusMessage: d.statusMessage || ""
-      });
-    });
-    allFriends = rows;
-    applyFilter();
-  }, (err) => {
-    console.error("Friends listener error:", err);
-    contactListEl.innerHTML = `<div class="emptyState">Error loading friends</div>`;
-  });
-}
-
-
-
-    //  Create Account
-    $("btnSignup").addEventListener("click", async () => {
-      const email = $("email").value.trim();
-      const pass = $("password").value;
-      if (!email || !pass) return showError("Email y contraseña son requeridos.");
-      showError("Creando cuenta...", "#555");
-      try {
-        const cred = await createUserWithEmailAndPassword(auth, email, pass);
-        const localName = email.split("@")[0];
-        await setDoc(doc(db, "users", cred.user.uid), {
-          uid: cred.user.uid,
-          email: email.toLowerCase(),
-          displayName: localName,
-          createdAt: serverTimestamp(),
-          emailVerified: cred.user.emailVerified
-        });
-        await sendEmailVerification(cred.user);
-        showError("Cuenta creada. Verifica tu correo para continuar.", "green");
-      } catch (e) {
-        const map = {
-          "auth/email-already-in-use": "Ese email ya está en uso.",
-          "auth/invalid-email": "Email inválido.",
-          "auth/weak-password": "La contraseña debe tener al menos 6 caracteres."
-        };
-        showError(map[e.code] || "No se pudo crear la cuenta.");
-      }
-    });
-
-    // LogIn
-    $("btnLogin").addEventListener("click", async () => {
-      const email = $("email").value.trim();
-      const pass = $("password").value;
-      if (!email || !pass) return showError("Ingresa email y contraseña.");
-      showError("Verificando...", "#555");
-      try {
-        const { user } = await signInWithEmailAndPassword(auth, email, pass);
-        if (!user.emailVerified) return showError("Tu email no está verificado. Revisa tu correo.");
-        $("authView").classList.add("hidden");
-        $("chatView").classList.remove("hidden");
-        startFriendsListener(user);
-      } catch (e) {
-        const map = {
-          "auth/invalid-credential": "Credenciales inválidas.",
-          "auth/user-not-found": "Usuario no encontrado.",
-          "auth/wrong-password": "Contraseña incorrecta."
-        };
-        showError(map[e.code] || "Error al iniciar sesión.");
-      }
-    });
-
-    // Logout
-    $("btnLogout").addEventListener("click", async () => {
-      await signOut(auth);
-      $("chatView").classList.add("hidden");
-      $("authView").classList.remove("hidden");
-    });
-    onAuthStateChanged(auth, (me) => {
-  if (me && me.emailVerified) {
-    $("authView").classList.add("hidden");
-    $("chatView").classList.remove("hidden");
-    startFriendsListener(me);
-  } else {
-    $("chatView").classList.add("hidden");
-    $("authView").classList.remove("hidden");
-    if (startFriendsListener.unsub) {
-      startFriendsListener.unsub();
-      startFriendsListener.unsub = null;
-    }
-  }
-});
-
-  </script>
+  
+  <script type="module" src="index.js"></script>
 </body>
 </html>
