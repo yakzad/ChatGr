@@ -1,140 +1,162 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ChatGr Login</title>
-  <link rel="stylesheet" href="style.css">
-</head>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ChatGr Login</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
 
-<body>
-  <!-- AUTH VIEW -->
-<div id="authView">
-  <div class="auth-wrap">
-    <div class="auth-card">
-      <img class="auth-logo" src="img/ChatGr.png" alt="ChatGr">
-      <h1>Welcome back</h1>
-      <p class="auth-sub">The Smart Way to Connect</p>
+  <body>
+    <!-- AUTH VIEW -->
+    <div id="authView">
+      <div class="auth-wrap">
+        <div class="auth-card">
+          <img class="auth-logo" src="img/ChatGr.png" alt="ChatGr" />
+          <h1>Welcome back</h1>
+          <p class="auth-sub">The Smart Way to Connect</p>
 
-      <label>Email</label>
-      <input id="email" type="email" placeholder="you@example.com" autocomplete="email">
+          <label>Email</label>
+          <input
+            id="email"
+            type="email"
+            placeholder="you@example.com"
+            autocomplete="email"
+          />
 
-      <label>Password</label>
-      <div class="auth-pass">
-        <input id="password" type="password" placeholder="••••••••" autocomplete="current-password">
-        <button type="button" class="show-pass" aria-label="Show password">👁️</button>
-      </div>
+          <label>Password</label>
+          <div class="auth-pass">
+            <input
+              id="password"
+              type="password"
+              placeholder="••••••••"
+              autocomplete="current-password"
+            />
+            <button type="button" class="show-pass" aria-label="Show password">
+              👁️
+            </button>
+          </div>
 
-      <button id="btnLogin" class="btn-primary">Sign in</button>
-      <button id="btnSignup" class="btn-secondary">Create Account</button>
+          <button id="btnLogin" class="btn-primary">Sign in</button>
+          <button id="btnSignup" class="btn-secondary">Create Account</button>
 
-      <p id="authError" class="auth-error hidden"></p>
+          <p id="authError" class="auth-error hidden"></p>
 
-      <div class="auth-foot">
+          <div class="auth-foot"></div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
 
+    <!--  CHAT -->
+    <div id="chatView" class="hidden">
+      <div id="chatLayout">
+        <div id="sidebar">
+          <img src="img/ChatGr.png" alt="ChatGr logo" id="ChatLogo" />
+          <div id="searchBar">
+            <input
+              id="chatSearch"
+              type="text"
+              placeholder="Search GrChats..."
+            />
+            <button id="enterChatbtn" type="button" aria-label="Enter chat">
+              Search GrFriends
+            </button>
+          </div>
+          <h3 id="friendsTitle">Select a GrFriend</h3>
 
-
-
-  <!--  CHAT -->
-  <div id="chatView" class="hidden">
-    <div id="chatLayout">
-      <div id="sidebar">
-        <img src="img/ChatGr.png" alt="ChatGr logo" id="ChatLogo">
-        <div id="searchBar">
-          <input id="chatSearch" type="text" placeholder="Search GrChats...">
-          <button id="enterChatbtn" type="button" aria-label="Enter chat">Search GrFriends</button>
+          <div id="contactList"></div>
+          <button id="btnLogout">SignOut</button>
         </div>
-                  <h3 id="friendsTitle">Select a GrFriend</h3>
 
-        <div id="contactList"></div>
-        <button id="btnLogout">SignOut</button>
+        <section id="chatPanel">
+          <div id="chatHeader">
+            <span id="chatHeaderName">ChatGr</span>
+            <button
+              id="contactInfoBtn"
+              type="button"
+              aria-label="Show contact info"
+            >
+              ⓘ
+            </button>
+          </div>
+
+          <div id="contactInfoPanel" class="hidden"></div>
+
+          <div id="messages"></div>
+
+          <div id="messageInputBar">
+            <button id="emojiBtn" type="button" aria-label="Emoji">😊</button>
+            <input
+              id="messageInput"
+              type="text"
+              placeholder="Type a message..."
+            />
+            <button id="sendBtn" type="button">Send</button>
+          </div>
+
+          <div id="emojiPanel">
+            <!-- Caritas -->
+            <button class="emoji">😀</button>
+            <button class="emoji">😁</button>
+            <button class="emoji">😂</button>
+            <button class="emoji">🤣</button>
+            <button class="emoji">😅</button>
+            <button class="emoji">😊</button>
+            <button class="emoji">😍</button>
+            <button class="emoji">😘</button>
+            <button class="emoji">😎</button>
+            <button class="emoji">😢</button>
+            <button class="emoji">😭</button>
+            <button class="emoji">😡</button>
+            <button class="emoji">😱</button>
+            <button class="emoji">🤔</button>
+            <button class="emoji">🤭</button>
+            <button class="emoji">🤫</button>
+            <button class="emoji">😴</button>
+            <button class="emoji">🤤</button>
+            <button class="emoji">🥳</button>
+            <button class="emoji">🤯</button>
+
+            <!-- Manos -->
+            <button class="emoji">👍</button>
+            <button class="emoji">👎</button>
+            <button class="emoji">👏</button>
+            <button class="emoji">🙌</button>
+            <button class="emoji">🙏</button>
+            <button class="emoji">🤝</button>
+            <button class="emoji">👌</button>
+            <button class="emoji">✌️</button>
+            <button class="emoji">🤟</button>
+
+            <!-- Objetos / símbolos -->
+            <button class="emoji">❤️</button>
+            <button class="emoji">💔</button>
+            <button class="emoji">💪</button>
+            <button class="emoji">🔥</button>
+            <button class="emoji">💯</button>
+            <button class="emoji">🎉</button>
+            <button class="emoji">🎁</button>
+            <button class="emoji">⭐</button>
+            <button class="emoji">🌙</button>
+            <button class="emoji">☀️</button>
+            <button class="emoji">🌈</button>
+            <button class="emoji">⚡</button>
+
+            <!-- Animales / comida -->
+            <button class="emoji">🐶</button>
+            <button class="emoji">🐱</button>
+            <button class="emoji">🐰</button>
+            <button class="emoji">🐻</button>
+            <button class="emoji">🍎</button>
+            <button class="emoji">🍕</button>
+            <button class="emoji">🍔</button>
+            <button class="emoji">🍩</button>
+            <button class="emoji">☕</button>
+          </div>
+        </section>
       </div>
+    </div>
 
-<section id="chatPanel">
-  <div id="chatHeader">
-    <span id="chatHeaderName">ChatGr</span>
-    <button id="contactInfoBtn" type="button" aria-label="Show contact info">ⓘ</button>
-  </div>
-
-  <div id="contactInfoPanel" class="hidden"></div>
-
-  <div id="messages"></div>
-
-  <div id="messageInputBar">
-    <button id="emojiBtn" type="button" aria-label="Emoji">😊</button>
-    <input id="messageInput" type="text" placeholder="Type a message..." />
-    <button id="sendBtn" type="button">Send</button>
-  </div>
-
-  <div id="emojiPanel">
-    <!-- Caritas -->
-    <button class="emoji">😀</button>
-    <button class="emoji">😁</button>
-    <button class="emoji">😂</button>
-    <button class="emoji">🤣</button>
-    <button class="emoji">😅</button>
-    <button class="emoji">😊</button>
-    <button class="emoji">😍</button>
-    <button class="emoji">😘</button>
-    <button class="emoji">😎</button>
-    <button class="emoji">😢</button>
-    <button class="emoji">😭</button>
-    <button class="emoji">😡</button>
-    <button class="emoji">😱</button>
-    <button class="emoji">🤔</button>
-    <button class="emoji">🤭</button>
-    <button class="emoji">🤫</button>
-    <button class="emoji">😴</button>
-    <button class="emoji">🤤</button>
-    <button class="emoji">🥳</button>
-    <button class="emoji">🤯</button>
-
-    <!-- Manos -->
-    <button class="emoji">👍</button>
-    <button class="emoji">👎</button>
-    <button class="emoji">👏</button>
-    <button class="emoji">🙌</button>
-    <button class="emoji">🙏</button>
-    <button class="emoji">🤝</button>
-    <button class="emoji">👌</button>
-    <button class="emoji">✌️</button>
-    <button class="emoji">🤟</button>
-
-    <!-- Objetos / símbolos -->
-    <button class="emoji">❤️</button>
-    <button class="emoji">💔</button>
-    <button class="emoji">💪</button>
-    <button class="emoji">🔥</button>
-    <button class="emoji">💯</button>
-    <button class="emoji">🎉</button>
-    <button class="emoji">🎁</button>
-    <button class="emoji">⭐</button>
-    <button class="emoji">🌙</button>
-    <button class="emoji">☀️</button>
-    <button class="emoji">🌈</button>
-    <button class="emoji">⚡</button>
-
-    <!-- Animales / comida -->
-    <button class="emoji">🐶</button>
-    <button class="emoji">🐱</button>
-    <button class="emoji">🐰</button>
-    <button class="emoji">🐻</button>
-    <button class="emoji">🍎</button>
-    <button class="emoji">🍕</button>
-    <button class="emoji">🍔</button>
-    <button class="emoji">🍩</button>
-    <button class="emoji">☕</button>
-  </div>
-</section>
-</div>
-</div>
-
-
-  
-  <script type="module" src="index.js"></script>
-</body>
+    <script type="module" src="index.js"></script>
+  </body>
 </html>
